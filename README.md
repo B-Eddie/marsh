@@ -11,7 +11,6 @@ The predictor considers various factors like the day of the week, random chance,
 Run the web app with npm:
 
 ```bash
-cd nextjs-app
 npm run dev
 ```
 
