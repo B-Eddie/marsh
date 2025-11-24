@@ -1,10 +1,14 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-function predictTestDelay(assignment: string): { willDelay: boolean; probability: number; delayDays: number } {
+function predictTestDelay(assignment: string): {
+  willDelay: boolean;
+  probability: number;
+  delayDays: number;
+} {
   const today = new Date();
   const dayOfWeek = today.getDay(); // 0=Sunday, 6=Saturday
 
@@ -12,13 +16,13 @@ function predictTestDelay(assignment: string): { willDelay: boolean; probability
   let hash = 0;
   for (let i = 0; i < assignment.length; i++) {
     const char = assignment.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
 
   // Use hash to generate pseudo-random values
-  const randomChance = (Math.abs(hash) % 10) > 3; // 60% chance based on hash
-  const moonPhase = (Math.abs(hash * 7) % 10) > 5;
+  const randomChance = Math.abs(hash) % 10 > 3; // 60% chance based on hash
+  const moonPhase = Math.abs(hash * 7) % 10 > 5;
   const coffeeLevel = (Math.abs(hash * 13) % 10) + 1 > 5;
 
   // Factors that might influence the prediction
@@ -31,7 +35,8 @@ function predictTestDelay(assignment: string): { willDelay: boolean; probability
   };
 
   // Calculate probability
-  const probability = Object.values(factors).filter(Boolean).length / Object.keys(factors).length;
+  const probability =
+    Object.values(factors).filter(Boolean).length / Object.keys(factors).length;
 
   // Decision - make it consistent, no extra randomness, biased towards no delay
   const willDelay = probability > 0.7;
@@ -42,18 +47,30 @@ function predictTestDelay(assignment: string): { willDelay: boolean; probability
   return { willDelay, probability, delayDays };
 }
 
-const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const dayNames = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 export default function Home() {
-  const [assignment, setAssignment] = useState("")
-  const [result, setResult] = useState<{ willDelay: boolean; probability: number; delayDays: number } | null>(null)
+  const [assignment, setAssignment] = useState("");
+  const [result, setResult] = useState<{
+    willDelay: boolean;
+    probability: number;
+    delayDays: number;
+  } | null>(null);
 
   const handleCalculate = () => {
     if (assignment.trim()) {
-      const prediction = predictTestDelay(assignment)
-      setResult(prediction)
+      const prediction = predictTestDelay(assignment);
+      setResult(prediction);
     }
-  }
+  };
 
   const today = new Date();
   const dayName = dayNames[today.getDay()];
@@ -72,7 +89,9 @@ export default function Home() {
 
         <div className="flex items-center gap-6">
           <div className="hidden lg:block">
-            <p className="text-sm font-semibold uppercase tracking-wider text-gray-400">Trending Assignments</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+              Trending Assignments
+            </p>
             <div className="mt-1 flex items-center gap-2">
               <span className="text-2xl">🥇</span>
               <span className="text-base">Macbeth Test</span>
@@ -92,20 +111,39 @@ export default function Home() {
           {result ? (
             <div className="space-y-4">
               <h2 className="text-3xl font-bold text-white">
-                Chance of test delay {result.willDelay ? `by ${result.delayDays} day${result.delayDays === 1 ? '' : 's'}` : ''} on {dayName} for {assignment}
+                Chance of test delay{" "}
+                {result.willDelay
+                  ? `by ${result.delayDays} day${
+                      result.delayDays === 1 ? "" : "s"
+                    }`
+                  : ""}{" "}
+                on {dayName} for {assignment}
               </h2>
               <div className="text-6xl font-bold text-[#00b8ff]">
                 {Math.round(result.probability * 100)}%
               </div>
               <div className="text-lg text-gray-400">
-                of a test delay {result.willDelay ? `by ${result.delayDays} day${result.delayDays === 1 ? '' : 's'}` : ''}
+                of a test delay{" "}
+                {result.willDelay
+                  ? `by ${result.delayDays} day${
+                      result.delayDays === 1 ? "" : "s"
+                    }`
+                  : ""}
               </div>
               <div className="text-sm text-gray-500">
                 🔥 3 others hoping for a test delay tonight.
               </div>
-              <img src="https://snowdaypredictor.com/img/for-good-luck.5a663867.svg" alt="for good luck" className="mx-auto" />
+              <img
+                src="https://snowdaypredictor.com/img/for-good-luck.5a663867.svg"
+                alt="for good luck"
+                className="mx-auto"
+              />
               <p className="text-xl text-white mt-4">
-                {result.willDelay ? `🎉 Good news! Mr. Marsh is likely to delay the test by ${result.delayDays} day${result.delayDays === 1 ? '' : 's'}!` : "📝 Bad news! The test is probably happening as scheduled."}
+                {result.willDelay
+                  ? `🎉 Good news! Mr. Marsh is likely to delay the test by ${
+                      result.delayDays
+                    } day${result.delayDays === 1 ? "" : "s"}!`
+                  : "📝 Bad news! The test is probably happening as scheduled."}
               </p>
               <Button
                 onClick={() => setResult(null)}
@@ -156,15 +194,18 @@ export default function Home() {
       {/* Footer */}
       <footer className="px-6 py-8 lg:px-12">
         <div className="flex items-center justify-between border-t border-gray-700 pt-8">
-          <p className="text-sm text-gray-400">Mr. Marsh Test Delay Predictor © 2025</p>
+          <p className="text-sm text-gray-400">
+            Mr. Marsh Test Delay Predictor © 2025
+          </p>
         </div>
 
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-500">
-            Test delay calculator, enter your assignment name to calculate the odds of test being delayed.
+            Test delay calculator, enter your assignment name to calculate the
+            odds of test being delayed.
           </p>
         </div>
       </footer>
     </div>
-  )
+  );
 }
