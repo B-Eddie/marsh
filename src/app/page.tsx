@@ -42,7 +42,7 @@ function predictTestDelay(assignment: string): {
   const willDelay = probability > 0.7;
 
   // Delay days: 1 to 90 (3 months)
-  const delayDays = willDelay ? (Math.abs(hash * 17) % 90) + 1 : 0;
+  const delayDays = willDelay ? (Math.abs(hash * 17) % 6) + 1 : 0;
 
   return { willDelay, probability, delayDays };
 }
